@@ -143,7 +143,7 @@ class Block_Controller(object):
         #
         width = self.board_data_width
         height = self.board_data_height
-
+        
         # evaluation paramters
         ## lines to be removed
         fullLines = 0
@@ -199,6 +199,13 @@ class Block_Controller(object):
             BlockMaxDy += [val]
         for x in BlockMaxDy:
             absDy += abs(x)
+        
+        #BlockMaxDyから最小のものだけ除外するBlockMaxDy2をつくる
+        #一番低いやつが何番目か？
+        #
+        #BlockMaxDy.index(min(BlockMaxDy))
+        #BlockMaxDy2 = 
+
 
         #### maxDy
         #maxDy = max(BlockMaxY) - min(BlockMaxY)
@@ -220,17 +227,46 @@ class Block_Controller(object):
 
         # calc Evaluation Value
         score = 0
-        score = score + fullLines * 100.0           # try to delete line 
-        score = score - nHoles * 1               # try not to make hole
-        score = score - nIsolatedBlocks * 10      # try not to make isolated block
-        score = score - absDy * 10                # try to put block smoothly
-        #score = score - maxDy * 0.3                # maxDy
-        score = score - maxHeight * 20              # maxHeight
-        #score = score - stdY * 1.0                 # statistical data
-        #score = score - stdDY * 0.01               # statistical data
+
+        if maxHeight >=18:
+            score = score + fullLines *500.0           # try to delete line 
+            score = score - nHoles * 100               # try not to make hole
+            score = score - nIsolatedBlocks * 10      # try not to make isolated block
+            score = score - absDy * 10                # try to put block smoothly
+            #score = score - maxDy * 0.3                # maxDy
+            score = score - maxHeight * 50              # maxHeight
+            #score = score - stdY * 1.0          z       # statistical data
+            #score = score - stdDY * 0.01               # statistical data   
+        elif fullLines >= 3:
+            score = score + fullLines *600           # try to delete line 
+            score = score - nHoles * 100               # try not to make hole
+            score = score - nIsolatedBlocks * 30      # try not to make isolated block
+            score = score - absDy * 10                # try to put block smoothly
+            #score = score - maxDy * 0.3                # maxDy
+            score = score - maxHeight * 10              # maxHeight
+            #score = score - stdY * 1.0                 # statistical data
+            #score = score - stdDY * 0.01               # statistical data
+        elif fullLines == 2:
+            score = score - fullLines *30.0           # try to delete line 
+            score = score - nHoles * 100               # try not to make hole
+            score = score - nIsolatedBlocks * 10      # try not to make isolated block
+            score = score - absDy * 20                # try to put block smoothly
+            #score = score - maxDy * 0.3                # maxDy
+            score = score - maxHeight * 0              # maxHeight
+            #score = score - stdY * 1.0                 # statistical data
+            #score = score - stdDY * 0.01               # statistical data
+        else :
+            score = score - fullLines *100.0           # try to delete line 
+            score = score - nHoles * 100               # try not to make hole
+            score = score - nIsolatedBlocks * 10      # try not to make isolated block
+            score = score - absDy * 15                # try to put block smoothly
+            #score = score - maxDy * 0.3                # maxDy
+            score = score - maxHeight * 10              # maxHeight
+            #score = score - stdY * 1.0          z       # statistical data
+            #score = score - stdDY * 0.01               # statistical data
 
         # print(score, fullLines, nHoles, nIsolatedBlocks, maxHeight, stdY, stdDY, absDy, BlockMaxY)
         return score
 
 
-BLOCK_CONTROLLER_SAMPLE = Block_Controller()
+BLOCK_CONTROLLER = Block_Controller()
